@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Todo List</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/styles.css" type="text/css">
+  </head>
+  <body>
+    <h1>My Todo List</h1>
+    <div id="todo-table">
+      <form>
+        <input type="text" name="item" placeholder="Add new item.." required>
+        <button type="submit">Add item</button>
+      </form>
+      <ul>
+        <% for(var i=0;i<todos.length;i++){ %>
+          <li><%= todos[i].item %></li>
+        <% } %>
+      </ul>
+    </div>
+  </body>
+  <script>
+  $(document).ready(function(){
+
+    $('form').on('submit', function(){
+
+        var item = $('form input');
+        var todo = {item: item.val()};
+
+        $.ajax({
+          type: 'POST',
+          url: '/todo',
+          data: todo,
+          success: function(data){
+            //do something with the data via front-end framework
+            location.reload();
+          }
+        });
+
+        return false;
+
+    });
+
+    $('li').on('click', function(){
+        var item = $(this).text().replace(/ /g, "-");
+        $.ajax({
+          type: 'DELETE',
+          url: '/todo/' + item,
+          success: function(data){
+            //do something with the data via front-end framework
+            location.reload();
+          }
+        });
+    });
+
+  });
+
+  </script>
+</html>
